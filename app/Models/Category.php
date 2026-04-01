@@ -15,10 +15,10 @@ class Category extends Model
         'name',
         'description',
     ];
-    
-    public function getServicesCount()
+
+      public function services()
     {
-        return $this->services()->count();
+        return $this->hasMany(Service::class, 'category_id', 'category_id');
     }
     
     public function getMinPrice()
@@ -31,17 +31,4 @@ class Category extends Model
         return $this->services()->max('price');
     }
     
-    public function getAveragePrice()
-    {
-        return round($this->services()->avg('price'), 2);
-    }
-    
-    public function getPopularServices($limit = 3)
-    {
-        return $this->services()
-                    ->withCount('reservations')
-                    ->orderBy('reservations_count', 'desc')
-                    ->limit($limit)
-                    ->get();
-    }
 }

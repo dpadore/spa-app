@@ -19,6 +19,16 @@ class Review extends Model
         'review_date',
     ];
     
+     public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
+    
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'service_id', 'service_id');
+    }
+    
     public function getFormattedDate()
     {
         return $this->review_date->format('d.m.Y');

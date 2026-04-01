@@ -21,6 +21,21 @@ class Reservation extends Model
     ];
     
   
+       public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
+    
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'service_id', 'service_id');
+    }
+    
+    public function specialist()
+    {
+        return $this->belongsTo(Specialist::class, 'specialist_id', 'specialist_id');
+    }
+    
     public function isActive()
     {
         return $this->status === 'active';

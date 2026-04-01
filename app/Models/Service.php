@@ -19,6 +19,25 @@ class Service extends Model
         'category_id',
     ];
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'category_id');
+    }
+    
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class, 'service_id', 'service_id');
+    }
+    
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'service_id', 'service_id');
+    }
+    
+    public function favoritedBy()
+    {
+        return $this->hasMany(Favorite::class, 'service_id', 'service_id');
+    }
     
     public function formattedDuration()
     {
@@ -55,11 +74,4 @@ class Service extends Model
         return $this->favoritedBy()->where('user_id', $userId)->exists();
     }
     
-    public function getUpcomingReservations()
-    {
-        return $this->reservations()
-                    ->where('reservation_date', '>=', today())
-                    ->where('status', 'active')
-                    ->get();
-    }
 }

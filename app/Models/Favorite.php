@@ -16,6 +16,15 @@ class Favorite extends Model
         'service_id',
     ];
     
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
+    
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'service_id', 'service_id');
+    }
     public function scopeForUser($query, $userId)
     {
         return $query->where('user_id', $userId);

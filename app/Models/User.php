@@ -19,6 +19,21 @@ class User extends Authenticatable
 
     protected $hidden = ['password','remember_token',];
 
+
+      public function reservations()
+    {
+        return $this->hasMany(Reservation::class, 'user_id', 'user_id');
+    }
+    
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'user_id', 'user_id');
+    }
+    
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class, 'user_id', 'user_id');
+    }
     
     public function isAdmin()
     {
