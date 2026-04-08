@@ -9,12 +9,18 @@
             <p class="card-text">{{ $service->description }}</p>
             <p><strong>Цена:</strong> {{ number_format($service->price, 0, ',', ' ') }} BYN</p>
             <p><strong>Длительность:</strong> {{ $service->duration }} мин</p>
-            
-            @auth
-                <a href="/reservations/create?service_id={{ $service->service_id }}" class="btn btn-primary">
+            <div class="mt-4">
+                <a href="{{ route('reservations.create') }}?service_id={{ $service->service_id }}" class="btn"style="background-color: #96440e; border: none; color: #fff;">
                     Записаться
                 </a>
-            @endauth
+
+                <form action="{{ route('favorites.add', $service->service_id) }}" method="POST" style="display: inline;">
+                    @csrf
+                    <button type="submit" class="btn btn-custom-about">
+                        В избранное
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 @endsection

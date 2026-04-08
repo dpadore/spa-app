@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Service;
 use App\Models\Specialist;
-use App\Models\Review;
 use App\Models\Reservation;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
+
     public function index()
     {
         $popularServices = Service::withCount('reservations')
@@ -19,12 +19,8 @@ class HomeController extends Controller
                                  ->get();
         
         $specialists = Specialist::limit(4)->get();
-        $latestReviews = Review::with(['user', 'service'])
-                              ->orderBy('review_date', 'desc')
-                              ->limit(3)
-                              ->get();
         
-        return view('home', compact('popularServices', 'specialists', 'latestReviews'));
+        return view('home', compact('popularServices', 'specialists'));
     }
 
     public function dashboard()
@@ -39,4 +35,5 @@ class HomeController extends Controller
         
         return view('dashboard.index', compact('user', 'activeReservations'));
     }
+
 }

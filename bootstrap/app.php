@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Регистрируем ваш кастомный Middleware под коротким именем
+        $middleware->alias([
+            'auth.notice' => \App\Http\Middleware\RedirectIfGuestWithNotice::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
