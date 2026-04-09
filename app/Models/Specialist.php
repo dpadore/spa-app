@@ -14,8 +14,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
     protected $fillable = [
         'name',
         'bio',
-        'photo_path',
+        'photo_path'
     ];
+
+    public $timestamps = true;
 
     public function getPhotoUrlAttribute()
     {

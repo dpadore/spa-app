@@ -29,6 +29,7 @@
         .nav-link i {
             font-size: 1.2rem;
         }
+
         .btn-custom-about {
             border: 2px solid #96440e;
             color: #96440e;
@@ -65,6 +66,14 @@
                     </li>
 
                     @auth
+                        @if(Auth::user()->isAdmin())
+                            <li class="nav-item">
+                                <a class="nav-link text-danger fw-bold" href="{{ route('admin.index') }}">
+                                 Админ-панель
+                                </a>
+                            </li>
+                        @endif
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">

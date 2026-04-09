@@ -13,8 +13,12 @@ class AdminMiddleware
      *
      * @param  Closure(Request): (Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
-        return $next($request);
+        if (auth()->check() && auth()->user()->isAdmin()) {
+            return $next($request);
+        }
+
+        return redirect('/')->with('error', 'У вас нет прав доступа к этому разделу.');
     }
 }
