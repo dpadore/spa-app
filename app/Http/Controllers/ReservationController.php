@@ -36,7 +36,23 @@ class ReservationController extends Controller
             'reservation_time' => 'required',
         ]);
 
-        // проверка на занятость времени
+        // Нельзя записаться на прошедшую дату
+        $today = date('Y-m-d');
+        $currentTime = date('H:i:s');
+        
+        // если дата сегодняшняя
+        if ($request->reservation_date == $today) {
+            if ($request->reservation_time < $currentTime) {
+                return back()->withErrors(['time' => 'Это время уже не актуально'])->withInput();
+            }
+        }
+        
+        // если дата уже прошла
+        if ($request->reservation_date < $today) {
+            return back()->withErrors(['time' => 'Нельзя записаться на прошедшую дату'])->withInput();
+        }
+
+        // проверка на занятость времени у специалиста
         $exists = Reservation::where('specialist_id', $request->specialist_id)
             ->where('reservation_date', $request->reservation_date)
             ->where('reservation_time', $request->reservation_time)
@@ -47,7 +63,7 @@ class ReservationController extends Controller
             return back()->withErrors(['time' => 'Это время уже занято'])->withInput();
         }
     
-        // проверка на занятость в этот день и в это время 
+        // проверка на занятость пользователя в это время
         $userBusy = Reservation::where('user_id', Auth::user()->user_id)
             ->where('reservation_date', $request->reservation_date)
             ->where('reservation_time', $request->reservation_time)
@@ -55,7 +71,7 @@ class ReservationController extends Controller
             ->exists();
 
         if ($userBusy) {
-            return back()->withErrors(['time' => 'У вас уже есть активная запись на это время к другому специалисту'])->withInput();
+            return back()->withErrors(['time' => 'У вас уже есть активная запись на это время'])->withInput();
         }
 
         Reservation::create([

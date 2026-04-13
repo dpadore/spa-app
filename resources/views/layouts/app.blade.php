@@ -43,6 +43,54 @@
             background-color: #96440e;
             color: #ffffff !important;
         }
+        html, body {
+            height: 100%;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        main {
+            flex: 1;
+        }
+        
+        .footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 40px 0 20px;
+            margin-top: 50px;
+        }
+        
+        .footer h5 {
+            color: #81D8D0;
+            margin-bottom: 20px;
+        }
+        
+        .footer a {
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer a:hover {
+            color: #81D8D0;
+        }
+        
+        .footer .social-icons a {
+            font-size: 24px;
+            margin-right: 15px;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid #34495e;
+            margin-top: 30px;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
     </style>
 </head>
 
@@ -149,6 +197,46 @@
             @yield('content')
         </div>
     </main>
+    <footer class="footer">
+    <div class="container">
+        <div class="row justify-content-between align-items-start">
+            <div class="col-md-4 mb-4 mb-md-0">
+                <h5>СПА Салон</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{{ route('services.index') }}">Услуги</a></li>
+                    <li><a href="{{ route('specialists.index') }}">Специалисты</a></li>
+                    <li><a href="{{ route('about') }}">О нас</a></li>
+                    @auth
+                        <li><a href="{{ route('dashboard') }}">Личный кабинет</a></li>
+                    @endauth
+                </ul>
+            </div>
+            
+            <div class="col-md-3 mb-4 mb-md-0">
+                <h5>Контакты</h5>
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-geo-alt-fill"></i> г. Минск, ул. Свердлова, 13а</li>
+                    <li><i class="bi bi-telephone-fill"></i> +375 (29) 123-45-67</li>
+                    <li><i class="bi bi-envelope-fill"></i> info@spa_salon.by</li>
+                </ul>
+            </div>
+
+            <div class="col-md-2 mb-4 mb-md-0">
+                <h5>Мы в соцсетях</h5>
+                <div class="social-icons">
+                    <a href="#" class="me-2"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="me-2"><i class="bi bi-telegram"></i></a>
+                    <a href="#" class="me-2"><i class="bi bi-vk"></i></a>
+                    <a href="#"><i class="bi bi-facebook"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p class="mb-0">&copy; {{ date('Y') }} СПА Салон.</p>
+        </div>
+    </div>
+</footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

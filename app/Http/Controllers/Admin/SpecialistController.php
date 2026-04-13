@@ -11,7 +11,7 @@ class SpecialistController extends Controller
     public function index()
     {
         $specialists = Specialist::select('specialist_id', 'name', 'bio', 'photo_path')->get();
-        return view('admin.specialists.index', compact('specialists'));
+        return view('admin.specialists.index', ['specialists' => $specialists]);
     }
 
     public function create()
@@ -24,6 +24,13 @@ class SpecialistController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'bio'  => 'required|string|max:2000', 
+        ], [
+            'name.required' => 'Поле "ФИО мастера" обязательно для заполнения',
+            'name.string' => 'Поле "ФИО мастера" должно быть строкой',
+            'name.max' => 'Поле "ФИО мастера" не может превышать 255 символов',
+            'bio.required' => 'Поле "Описание / Биография" обязательно для заполнения',
+            'bio.string' => 'Поле "Описание / Биография" должно быть строкой',
+            'bio.max' => 'Поле "Описание / Биография" не может превышать 2000 символов',
         ]);
 
         Specialist::create([
@@ -48,6 +55,11 @@ class SpecialistController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'bio'  => 'required|string|max:2000',
+        ], [
+            'name.required' => 'Поле "ФИО мастера" обязательно для заполнения',
+            'name.max' => 'Поле "ФИО мастера" не может превышать 255 символов',
+            'bio.required' => 'Поле "Описание / Биография" обязательно для заполнения',
+            'bio.max' => 'Поле "Описание / Биография" не может превышать 2000 символов',
         ]);
 
         $specialist->update([
@@ -55,7 +67,8 @@ class SpecialistController extends Controller
             'bio'  => $request->bio,
         ]);
 
-        return redirect()->route('admin.specialists.index')->with('success', 'Данные мастера обновлены');
+        return redirect()->route('admin.specialists.index')
+                         ->with('success', 'Данные мастера обновлены');
     }
 
     public function destroy($id)

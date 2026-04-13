@@ -22,7 +22,11 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255|unique:categories',
+            'name' => 'required|max:255|unique:categories,name',
+        ], [
+            'name.required' => 'Поле "Название категории" обязательно для заполнения',
+            'name.max' => 'Поле "Название категории" не может превышать 255 символов',
+            'name.unique' => 'Категория с таким названием уже существует',
         ]);
 
         Category::create([
@@ -31,12 +35,6 @@ class CategoryController extends Controller
 
         return redirect()->route('admin.categories.index')->with('success', 'Категория успешно создана!');
     }
-    public function destroy(Category $category)
-    {
-        $category->delete();
-
-        return redirect()->route('admin.categories.index')->with('success', 'Категория удалена');
-    }
 
     public function edit(Category $category)
     {
@@ -44,15 +42,26 @@ class CategoryController extends Controller
     }
 
     public function update(Request $request, Category $category)
-{
-    $request->validate([
-        'name' => 'required|max:255|unique:categories,name,' . $category->category_id . ',category_id',
-    ]);
+    {
+        $request->validate([
+            'name' => 'required|max:255|unique:categories,name,' . $category->category_id . ',category_id',
+        ], [
+            'name.required' => 'Поле "Название категории" обязательно для заполнения',
+            'name.max' => 'Поле "Название категории" не может превышать 255 символов',
+            'name.unique' => 'Категория с таким названием уже существует',
+        ]);
 
-    $category->update([
-        'name' => $request->name,
-    ]);
+        $category->update([
+            'name' => $request->name,
+        ]);
 
-    return redirect()->route('admin.categories.index')->with('success', 'Категория успешно обновлена!');
-}
+        return redirect()->route('admin.categories.index')->with('success', 'Категория успешно обновлена!');
+    }
+
+    public function destroy(Category $category)
+    {
+        $category->delete();
+
+        return redirect()->route('admin.categories.index')->with('success', 'Категория удалена');
+    }
 }

@@ -16,7 +16,8 @@ class ServiceController extends Controller
 
         $query->when($request->search, function ($q, $search) {
             return $q->where('title', 'like', "%{$search}%");
-        });
+        }
+        );
 
         $query->when($request->category, function ($q, $categoryId) {
             return $q->where('category_id', $categoryId);

@@ -8,6 +8,7 @@ use App\Models\Favorite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -20,18 +21,35 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
+        // Активные записи
         $activeReservations = Reservation::where('user_id', $user->user_id)
             ->where('status', 'active')
-            ->where('reservation_date', '>=', now())
+            ->where('reservation_date', '>=', now()->format('Y-m-d'))
             ->with(['service', 'specialist'])
             ->orderBy('reservation_date')
             ->orderBy('reservation_time')
             ->get();
 
-        $reservationsHistory = Reservation::where('user_id', $user->user_id)
-            ->whereIn('status', ['completed', 'cancelled'])
+        // Завершённые записи
+        $completedReservations = Reservation::where('user_id', $user->user_id)
+            ->where(function ($query) {
+                $query->where('status', 'completed')
+                    ->orWhere(function ($q) {
+                        $q->where('status', 'active')
+                            ->where('reservation_date', '<', now()->format('Y-m-d'));
+                    });
+            })
             ->with(['service', 'specialist'])
             ->orderBy('reservation_date', 'desc')
+            ->orderBy('reservation_time', 'desc')
+            ->get();
+
+        // Отменённые записи
+        $cancelledReservations = Reservation::where('user_id', $user->user_id)
+            ->where('status', 'cancelled')
+            ->with(['service', 'specialist'])
+            ->orderBy('reservation_date', 'desc')
+            ->orderBy('reservation_time', 'desc')
             ->get();
 
         $favorites = Favorite::where('user_id', $user->user_id)
@@ -41,9 +59,20 @@ class DashboardController extends Controller
         return view('dashboard.index', compact(
             'user',
             'activeReservations',
-            'reservationsHistory',
+            'completedReservations',
+            'cancelledReservations',
             'favorites',
         ));
+    }
+
+    // Автоматически завершаем прошедшие активные записи
+    public function updateReservationsStatus()
+    {
+        $updated = Reservation::where('status', 'active')
+            ->where('reservation_date', '<', now()->format('Y-m-d'))
+            ->update(['status' => 'completed']);
+
+        return redirect()->route('dashboard')->with('info', "Обновлено {$updated} записей");
     }
 
     // форма редактирования профиля
@@ -53,7 +82,7 @@ class DashboardController extends Controller
         return view('dashboard.edit', ['user' => $user]);
     }
 
-    // изменение 
+    // изменение профиля
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
@@ -83,7 +112,6 @@ class DashboardController extends Controller
         return redirect()->route('dashboard')->with('success', 'Профиль обновлен');
     }
 
-
     // избранное
     public function favorites()
     {
@@ -93,7 +121,6 @@ class DashboardController extends Controller
 
         return view('dashboard.favorites', compact('favorites'));
     }
-
 
     public function addFavorite($serviceId)
     {
@@ -112,7 +139,6 @@ class DashboardController extends Controller
         return back()->with('info', 'Услуга уже в избранном');
     }
 
- 
     public function removeFavorite($serviceId)
     {
         Favorite::where('user_id', Auth::id())
@@ -121,5 +147,4 @@ class DashboardController extends Controller
 
         return back()->with('success', 'Услуга удалена из избранного');
     }
-
 }

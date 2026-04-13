@@ -15,8 +15,11 @@
                         
                         <div class="mb-3">
                             <label for="name" class="form-label">ФИО мастера</label>
-                            <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" 
-                                   value="{{ old('name', $specialist->name) }}" required>
+                            <input type="text" 
+                                   name="name" 
+                                   id="name" 
+                                   class="form-control @error('name') is-invalid @enderror" 
+                                   value="{{ old('name', $specialist->name) }}">
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -24,7 +27,13 @@
 
                         <div class="mb-3">
                             <label for="bio" class="form-label">Описание / Биография</label>
-                            <textarea name="bio" id="bio" rows="5" class="form-control">{{ old('bio', $specialist->bio) }}</textarea>
+                            <textarea name="bio" 
+                                      id="bio" 
+                                      rows="5" 
+                                      class="form-control @error('bio') is-invalid @enderror">{{ old('bio', $specialist->bio) }}</textarea>
+                            @error('bio')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="d-flex justify-content-between">

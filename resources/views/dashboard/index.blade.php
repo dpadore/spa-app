@@ -69,6 +69,48 @@
                                 @endforeach
                             </div>
                         @endif
+
+                        <h5 class="mt-4">Завершённые записи</h5>
+                        @if($completedReservations->isEmpty())
+                            <p class="text-muted">Нет завершённых записей</p>
+                        @else
+                            <div class="row">
+                                @foreach($completedReservations as $reservation)
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h6>{{ $reservation->service->title }}</h6>
+                                                <p>Специалист: {{ $reservation->specialist->name }}</p>
+                                                <p>Дата: {{ $reservation->reservation_date }} в {{ $reservation->reservation_time }}
+                                                </p>
+                                                <span class="badge bg-secondary">Завершено</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        <h5 class="mt-4">Отменённые записи</h5>
+                        @if($cancelledReservations->isEmpty())
+                            <p class="text-muted">Нет отменённых записей</p>
+                        @else
+                            <div class="row">
+                                @foreach($cancelledReservations as $reservation)
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h6>{{ $reservation->service->title }}</h6>
+                                                <p>Специалист: {{ $reservation->specialist->name }}</p>
+                                                <p>Дата: {{ $reservation->reservation_date }} в {{ $reservation->reservation_time }}
+                                                </p>
+                                                <span class="badge bg-danger">Отменено</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

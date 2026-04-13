@@ -37,6 +37,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reservations/create', [ReservationController::class, 'create'])->name('reservations.create');
     Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
     Route::put('/reservations/{id}/cancel', [ReservationController::class, 'cancelReservation'])->name('reservations.cancel');
+    Route::get('/dashboard/update-status', [DashboardController::class, 'updateReservationsStatus'])->name('dashboard.update-status');
 });
 
 // админка
